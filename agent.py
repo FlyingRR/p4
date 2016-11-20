@@ -26,6 +26,7 @@ class LearningAgent(Agent):
         self.trialNumber = 1
 
 
+
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
             'testing' is set to True if testing trials are being used
@@ -77,8 +78,8 @@ class LearningAgent(Agent):
                  self.Q.update({state:{}})
                  for action in self.valid_actions:
                      self.Q[state].update({action : 0.0})
-        #print 'Q: ',self.Q 
-        #print 'state: ',state
+
+        self.state = state
 
         return state
 
@@ -155,9 +156,11 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
-        
+
+        next_state = self.build_state()
+
         if self.learning:
-            self.Q[state][action] = (1-self.alpha) * self.Q[state][action] + self.alpha * (reward + self.get_maxQ(state)[1])
+            self.Q[state][action] = (1-self.alpha) * self.Q[state][action] + self.alpha * (reward + self.get_maxQ(next_state)[1])
 
         return
 
@@ -166,13 +169,11 @@ class LearningAgent(Agent):
         """ The update function is called when a time step is completed in the 
             environment for a given trial. This function will build the agent
             state, choose an action, receive a reward, and learn if enabled. """
-
         state = self.build_state()          # Get current state
         self.createQ(state)                 # Create 'state' in Q-table
         action = self.choose_action(state)  # Choose an action
         reward = self.env.act(self, action) # Receive a reward
         self.learn(state, action, reward)   # Q-learn
-
         return
         
 
