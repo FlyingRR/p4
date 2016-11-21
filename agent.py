@@ -95,7 +95,14 @@ class LearningAgent(Agent):
 
 
         Q_row = self.Q[state]
-        maxQ = max(Q_row.iteritems(), key=lambda x:x[1])
+
+        maxInQ = max(Q_row.iteritems(), key=lambda x:x[1])
+        maxies={}
+        for key in Q_row.keys():
+            if Q_row[key] == maxInQ[1]:
+                maxies[key] = maxInQ[1]
+        maxkey = random.choice(maxies.keys())
+        maxQ = [maxkey, maxInQ[1]]
 
         return maxQ 
 
@@ -157,10 +164,11 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
 
-        next_state = self.build_state()
+        #next_state = self.build_state()
 
         if self.learning:
-            self.Q[state][action] = (1-self.alpha) * self.Q[state][action] + self.alpha * (reward + self.get_maxQ(next_state)[1])
+            #self.Q[state][action] = (1-self.alpha) * self.Q[state][action] + self.alpha * (reward + self.get_maxQ(next_state)[1])
+            self.Q[state][action] = (1-self.alpha) * self.Q[state][action] + self.alpha * reward
 
         return
 
